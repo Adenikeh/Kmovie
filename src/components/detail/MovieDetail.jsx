@@ -33,11 +33,32 @@ const MovieDetail = () => {
     return <div className=' w-full h-full text-center'>Loading...</div>;
   }
 
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString();
+  };
+
+const getYoutubeId = (url) =>{
+  try {
+    const urlObj = new URL(url);
+    if (urlObj.hostname === 'youtu.be') {
+      return urlObj.pathname.slice(1);
+    } else if (urlObj.hostname.includes('youtube.com')) {
+      return urlObj.searchParams.get('v');
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+  console.log(movieData.youtubeUrl)
+
   return (
     <div className="container mx-auto mt-8 max-w-screen-md">
       {/* YouTube Video */}
       <div className="relative h-0 overflow-hidden" style={{ paddingBottom: '56.25%' }}>
-        <YouTube videoId={movieData.youtubeVideoId} className=" block md:absolute top-0 left-0 mx-auto right-0 bottom-0 w-full h-full" />
+        <YouTube videoId={movieData.youtubeUrl} className=" block md:absolute top-0 left-0 mx-auto right-0 bottom-0 w-full h-full" />
       </div>
 
       {/* Movie Info Section */}
@@ -74,7 +95,7 @@ const MovieDetail = () => {
                     <span className="ml-2 text-gray-500">{episode.title}</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="mr-2 text-gray-500">{episode.uploadedAt}</span>
+                    <span className="mr-2 text-gray-500">{formatDate(episode.uploadedAt)}</span>
                     <a
                       href={episode.downloadUrl}
                       target="_blank"
